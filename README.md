@@ -25,7 +25,7 @@
 # 演示
 因为此项目没有页面，这里我们使用HTTP请求工具来测试，我使用的工具是`PostMan`，可以在Chrome扩展中安装它。
 
-通过以下操作可以观察到数据库`User`表的`IsDeleted`字段值的变化。再查看我们的`User`实体和普通的EF查询语句，并没有添加`IsDeleted`属性和它的过滤条件。也就是是说在不改变对象实体和查询条件的前提下，统一的方式实现了数据的软删除。
+通过以下操作可以观察到数据库`User`表的`IsDeleted`字段值的变化。再查看我们的`User`实体和普通的EF查询语句，并没有添加`IsDeleted`属性和它的过滤条件。也就是是说在不改变对象实体和查询条件的前提下，统一的方式实现了数据的软删除。
 ```csharp
     public class User
     {
@@ -86,4 +86,3 @@ Name=%22fuyun%22&UserId=0
 # 参考
 * 原文：[Entity Framework Core: Soft Delete using Query Filters](https://www.meziantou.net/2017/07/10/entity-framework-core-soft-delete-using-query-filters)
 * 中文翻译版：[Entity Framework Core 软删除与查询过滤器](http://www.cnblogs.com/tdfblog/p/entity-framework-core-soft-delete-using-query-filters.html)
-
