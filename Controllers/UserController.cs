@@ -10,79 +10,70 @@ namespace SoftDelete
     {
 
         [HttpGet]
-        public IEnumerable<User> Get()
+        public IActionResult Get()
         {
+
             using (var context = new MySQLDbContext())
             {
                 // Create database
                 context.Database.EnsureCreated();
 
-                return context.Users.ToList();
+                return Ok(context.Users.ToList());
             }
         }
 
         [HttpGet("{id}")]
-        public User Get(int id)
+        public IActionResult Get(int id)
         {
             using (var context = new MySQLDbContext())
             {
                 var user = context.Users.Find(id);
                 if (user == null)
-                {
-                    this.Response.StatusCode = 404;
-                    return null;
-                }
-                else
-                {
-                    return user;
-                }
+                    return NotFound();
+
+                return Ok(user);
             }
         }
 
         [HttpGet("recyclebin")]
-        public IEnumerable<User> RecycleBin()
+        public IActionResult RecycleBin()
         {
             using (var context = new MySQLDbContext())
             {
                 var users = context.Users.IgnoreQueryFilters()
                     .Where(user => EF.Property<bool>(user, "IsDeleted") == true);
 
-                return users.ToList();
+                return Ok(users.ToList());
             }
         }
 
         [HttpPost("recover/{id}")]
-        public void Recover(int id)
+        public IActionResult Recover(int id)
         {
             using (var context = new MySQLDbContext())
             {
                 var deletedUsers = context.Users.IgnoreQueryFilters()
                     .Where(user => user.UserId == id && EF.Property<bool>(user, "IsDeleted") == true);
                 if (deletedUsers.Count() == 0)
+                    return NotFound();
+
+                foreach (var delUser in deletedUsers)
                 {
-                    this.Response.StatusCode = 404;
+                    var userEntry = context.ChangeTracker.Entries<User>().First(user => user.Entity == delUser);
+                    userEntry.Property("IsDeleted").CurrentValue = false;
+                    userEntry.Property("DeleteTime").CurrentValue = null;
                 }
-                else
-                {
-                    foreach (var delUser in deletedUsers)
-                    {
-                        var userEntry = context.ChangeTracker.Entries<User>().First(user => user.Entity == delUser);
-                        userEntry.Property("IsDeleted").CurrentValue = false;
-                        userEntry.Property("DeleteTime").CurrentValue = null;
-                    }
-                    context.SaveChanges();
-                }
+                context.SaveChanges();
+                return NoContent();
             }
         }
 
         [HttpPost]
-        public void Post([FromForm]User user)
+        public IActionResult Post([FromForm]User user)
         {
-            if (user == null || user.Name == null)
-            {
-                Response.StatusCode = 400;
-                return;
-            }
+
+            if (!ModelState.IsValid)
+                return BadRequest();
 
             using (var context = new MySQLDbContext())
             {
@@ -93,10 +84,10 @@ namespace SoftDelete
                 try
                 {
                     context.SaveChanges();
+                    return Created($"api/user/{user.UserId}", user);
                 }
                 catch (System.Exception ex)
                 {
-
                     throw ex;
                 }
             }
@@ -104,35 +95,36 @@ namespace SoftDelete
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, string name)
+        public IActionResult Put(int id, [FromForm]User user)
         {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
             using (var context = new MySQLDbContext())
             {
-                var user = context.Users.Find(id);
-                if (user == null)
-                    this.Response.StatusCode = 404;
-                else
-                {
-                    user.Name = name;
-                    context.SaveChanges();
-                }
+                var updateUser = context.Users.Find(id);
+                if (updateUser == null)
+                    return NotFound();
+
+                updateUser.Name = user.Name;
+                context.SaveChanges();
+                return Created($"api/user/{user.UserId}", updateUser);
             }
 
         }
 
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
             using (var context = new MySQLDbContext())
             {
                 var user = context.Users.Find(id);
                 if (user == null)
-                    this.Response.StatusCode = 404;
-                else
-                {
-                    context.Users.Remove(user);
-                    context.SaveChanges();
-                }
+                    return NotFound();
+
+                context.Users.Remove(user);
+                context.SaveChanges();
+                return NoContent();
             }
         }
 

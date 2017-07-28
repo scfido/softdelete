@@ -8,7 +8,7 @@ namespace SoftDelete
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
 
-        [MaxLength(64)]
+        [MaxLength(64), Required]
         public string Name { get; set; }
     }
 }
