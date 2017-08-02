@@ -7,17 +7,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.Threading;
+using Microsoft.Extensions.Configuration;
 
 namespace SoftDelete
 {
     public class MySQLDbContext : DbContext
     {
+        string conenctionString;
+
+        public MySQLDbContext(IConfiguration config)
+        {
+            conenctionString = config.GetConnectionString("MySQL");
+        }
+
+
         public DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder
-                .UseMySql(@"Server=localhost;database=test;uid=root;pwd=123456;");
+            optionsBuilder.UseMySql(conenctionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
