@@ -2,9 +2,9 @@
 
 # 环境
 * MySQL 5.7
-* .Net Core 2.0 Preview2
-* Entity Framework Core 2.0 Preview2
-* Pomelo.EntityFrameworkCore.MySql 2.0 Preview2
+* .Net Core 2.0 Release
+* Entity Framework Core 2.0 Release
+* Pomelo.EntityFrameworkCore.MySql 2.0 rtm-10056
 
 ## 数据库
 默认数据库连接信息为：
@@ -13,7 +13,7 @@
 1. 账号`root`
 1. 密码`123456`
 
-请根据你数据库设置修改`MySQLDbContext.cs`文件中的数据库连接信息。
+请根据你数据库设置修改`appsettings.json`文件中的数据库连接信息。
  
 
 # 运行
@@ -23,7 +23,7 @@
     dotnet run
 
 # 演示
-因为此项目没有页面，这里我们使用HTTP请求工具来测试，我使用的工具是`PostMan`，可以在Chrome扩展中安装它。
+因为此项目没有页面，需要使用HTTP请求工具调用Web API来演示。我使用的工具是`PostMan`，可以在Chrome扩展中安装它。
 
 通过以下操作可以观察到数据库`User`表的`IsDeleted`字段值的变化。再查看我们的`User`实体和普通的EF查询语句，并没有添加`IsDeleted`属性和它的过滤条件。也就是是说在不改变对象实体和查询条件的前提下，统一的方式实现了数据的软删除。
 ```csharp
