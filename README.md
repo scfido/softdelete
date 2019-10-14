@@ -5,8 +5,8 @@
 ## 环境
 
 * MySQL 8.0
-* .Net Core 2.2 Release
-* Pomelo.EntityFrameworkCore.MySql 2.1.4
+* .Net Core 3.0 Release
+* Pomelo.EntityFrameworkCore.MySql 3.0.0-rc1.final
 
 ## 数据库
 

@@ -6,8 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SoftDelete
 {
+    [ApiController]
     [Route("api/[controller]")]
-    public class UserController : Controller
+    public class UserController : ControllerBase
     {
         MySQLDbContext dbContext;
 

@@ -1,0 +1,22 @@
+### 添加用户
+POST /api/user HTTP/1.1
+Host: localhost:5000
+Content-Type: application/x-www-form-urlencoded
+
+Name=%22fuyun%22&UserId=0
+
+
+### 获取用户
+GET http://localhost:5000/api/user
+
+
+### 删除用户
+DELETE http://localhost:5000/api/user/1
+
+
+### 获取被删除的用户
+GET http://localhost:5000/api/user/recyclebin
+
+
+### 恢复被删除的用户
+POST http://localhost:5000/api/user/recover/1
